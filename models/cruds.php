@@ -11,6 +11,17 @@ class Cruds {
         $data=$res->fetchAll(PDO::FETCH_ASSOC); 
         echo json_encode($data);
     }
+
+    public static function selectEstByCedula($cedula){
+        $objConn= new Conexion();
+        $conn=$objConn->Conectar();
+        $sql="select * from estudiante where cedula = :cedula";
+        $res=$conn->prepare($sql);
+        $res->bindParam(':cedula', $cedula);
+        $res->execute();
+        $data=$res->fetchAll(PDO::FETCH_ASSOC); 
+        echo json_encode($data);
+    }
     
     public static function insertEst(){
         $objConn= new Conexion();

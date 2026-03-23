@@ -5,7 +5,11 @@ $opc=$_SERVER['REQUEST_METHOD'];
 
 switch ($opc) {
     case 'GET':
-        Cruds::selectEst();
+        if(isset($_GET['cedula'])){
+            Cruds::selectEstByCedula($_GET['cedula']);
+        } else {
+            Cruds::selectEst();
+        }
         break;
     case 'POST':
         Cruds::insertEst();

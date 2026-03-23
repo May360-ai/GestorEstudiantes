@@ -53,8 +53,16 @@ table.table td i { font-size: 19px; }
 						<h2>Manage <b>Students</b></h2>
 					</div>
 					<div class="col-sm-6">
-						<!-- CAMBIO: Se añadió id="btnAbrirModalAdd" para resetear el modo a POST -->
 						<a href="#studentModal" id="btnAbrirModalAdd" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Student</span></a>
+						<!-- Búsqueda por Cédula -->
+						<div class="input-group mb-2" style="max-width: 250px; float: right; margin-right: 10px;">
+							<input type="text" id="txtBuscarCedula" class="form-control" placeholder="Search by ID...">
+							<div class="input-group-append">
+								<button class="btn btn-info" id="btnBuscar" type="button" style="margin: 0;">
+									<i class="material-icons" style="font-size: 18px; float: none; margin: 0;">search</i>
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

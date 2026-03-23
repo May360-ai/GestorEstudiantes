@@ -1,10 +1,8 @@
 $(document).ready(() => {
     const API_URL = "controllers/api.php";
     let selectedStudent = null;
-    let mode = 'POST'; // 'POST' para insertar, 'PUT' para actualizar
+    let mode = 'POST'; 
 
-    // Función para manejar las peticiones AJAX (Fetch)
-    // CAMBIO: Se ajustó para enviar parámetros por URL en PUT/DELETE para el backend PHP
     const request = async (method, data = null) => {
         let url = API_URL;
         const options = { method };
@@ -13,7 +11,6 @@ $(document).ready(() => {
             if (method === 'POST') {
                 options.body = new URLSearchParams(data);
             } else {
-                // PUT, DELETE y GET usan Query String en tu backend
                 url += '?' + new URLSearchParams(data).toString();
             }
         }
@@ -26,9 +23,9 @@ $(document).ready(() => {
         }
     };
 
-    // Cargar la tabla dinámicamente
-    const loadStudents = async () => {
-        const data = await request('GET');
+    const loadStudents = async (cedula = null) => {
+        const params = cedula ? { cedula } : null;
+        const data = await request('GET', params);
         const tbody = $('#tbodyEstudiantes');
         tbody.empty();
 
@@ -59,7 +56,17 @@ $(document).ready(() => {
         $('[data-toggle="tooltip"]').tooltip();
     };
 
-    // Evento al abrir modal para NUEVO registro
+    $('#btnBuscar').click(() => {
+        const cedula = $('#txtBuscarCedula').val().trim();
+        loadStudents(cedula !== "" ? cedula : null);
+    });
+
+    $('#txtBuscarCedula').on('keyup', (e) => {
+        if (e.key === 'Enter') {
+            $('#btnBuscar').click();
+        }
+    });
+
     $('#btnAbrirModalAdd').click(() => {
         mode = 'POST';
         $('#formEstudiante')[0].reset();
@@ -67,7 +74,6 @@ $(document).ready(() => {
         $('#modalTitle').text('Add Student');
     });
 
-    // Evento al abrir modal para EDITAR (usando delegación de eventos)
     $(document).on('click', '.edit', function() {
         mode = 'PUT';
         const est = $(this).data('json');
@@ -81,12 +87,10 @@ $(document).ready(() => {
         $('#txtDireccion').val(est.direccion);
     });
 
-    // Evento para capturar la cédula al intentar ELIMINAR
     $(document).on('click', '.delete', function() {
         selectedStudent = { cedula: $(this).data('cedula') };
     });
 
-    // Botón GUARDAR (Insertar o Actualizar)
     $('#btnGuardar').click(async () => {
         const formData = new FormData($('#formEstudiante')[0]);
         const data = Object.fromEntries(formData.entries());
@@ -97,7 +101,6 @@ $(document).ready(() => {
         loadStudents();
     });
 
-    // Botón CONFIRMAR ELIMINACIÓN
     $('#btnConfirmarEliminar').click(async () => {
         const response = await request('DELETE', { txtCedula: selectedStudent.cedula });
         alert(response);
@@ -105,6 +108,5 @@ $(document).ready(() => {
         loadStudents();
     });
 
-    // Carga inicial
     loadStudents();
 });
